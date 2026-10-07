@@ -3,23 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#040406">
-    <meta name="description" content="Nyx.cs — C++ developer and occasional C# enjoyer.">
-    <title>Nyx.cs — Developer Portfolio</title>
+
+    <meta
+        name="description"
+        content="Nyx.cs — C++ developer focused on systems programming, game engines, and software development."
+    >
+
+    <meta name="theme-color" content="#08090c">
+
+    <title>Nyx.cs — C++ Developer</title>
 
     <style>
         :root {
-            --bg: #040406;
-            --bg2: #09090d;
-            --text: #f5f5f7;
-            --muted: #858592;
-            --purple: #9b5cff;
-            --purple2: #6c2cff;
-            --cyan: #42e8ff;
-            --green: #5dff9a;
-            --red: #ff5f6d;
-            --card: rgba(15, 15, 22, 0.62);
-            --border: rgba(255, 255, 255, 0.09);
+            --bg: #08090c;
+            --surface: #0e1014;
+            --surface-2: #12151b;
+
+            --text: #f4f5f7;
+            --muted: #8b909b;
+            --subtle: #626873;
+
+            --accent: #9b6cff;
+            --accent-light: #b99cff;
+
+            --green: #63e6a5;
+            --red: #ff727d;
+
+            --border: rgba(255,255,255,.08);
+            --border-hover: rgba(155,108,255,.35);
+
+            --max-width: 1120px;
         }
 
         * {
@@ -35,19 +48,17 @@
         body {
             min-height: 100vh;
             overflow-x: hidden;
+
             background:
                 radial-gradient(
-                    circle at 50% -10%,
-                    rgba(120, 45, 255, 0.18),
-                    transparent 35%
-                ),
-                radial-gradient(
-                    circle at 10% 60%,
-                    rgba(66, 232, 255, 0.05),
-                    transparent 25%
+                    circle at 50% -15%,
+                    rgba(120,70,255,.14),
+                    transparent 34%
                 ),
                 var(--bg);
+
             color: var(--text);
+
             font-family:
                 Inter,
                 ui-sans-serif,
@@ -56,599 +67,1046 @@
                 BlinkMacSystemFont,
                 "Segoe UI",
                 sans-serif;
+
+            line-height: 1.6;
+        }
+
+        ::selection {
+            background: rgba(155,108,255,.35);
+            color: white;
         }
 
         a {
             color: inherit;
         }
 
-        /* =========================
+        button {
+            font: inherit;
+        }
+
+        /* =====================================
            BACKGROUND
-        ========================= */
+        ===================================== */
 
-        #canvas {
+        .grid {
             position: fixed;
             inset: 0;
-            z-index: -3;
-            width: 100%;
-            height: 100%;
-        }
 
-        .noise {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 20;
-            opacity: 0.025;
-            background-image:
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
-        }
-
-        .orb {
-            position: fixed;
-            width: 420px;
-            height: 420px;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.12;
-            pointer-events: none;
             z-index: -2;
+            pointer-events: none;
+
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,.025) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.025) 1px,
+                    transparent 1px
+                );
+
+            background-size: 60px 60px;
+
+            mask-image:
+                linear-gradient(
+                    to bottom,
+                    black,
+                    transparent 80%
+                );
         }
 
-        .orb.one {
-            background: var(--purple);
-            top: -180px;
-            left: 20%;
-        }
-
-        .orb.two {
-            background: var(--cyan);
-            right: -250px;
-            top: 45%;
-            opacity: 0.06;
-        }
-
-        /* =========================
-           NAVIGATION
-        ========================= */
-
-        nav {
+        .glow {
             position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            left: 50%;
+            top: -330px;
+
+            transform: translateX(-50%);
+
+            border-radius: 50%;
+
+            background: rgba(120,70,255,.16);
+
+            filter: blur(120px);
+
+            pointer-events: none;
+
+            z-index: -1;
+        }
+
+        /* =====================================
+           NAV
+        ===================================== */
+
+        .nav-container {
+            position: fixed;
+
             top: 0;
             left: 0;
+
             width: 100%;
+
+            padding: 18px 24px;
+
             z-index: 100;
-            padding: 22px 6%;
+        }
+
+        nav {
+            width: min(
+                var(--max-width),
+                100%
+            );
+
+            margin: auto;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(
-                to bottom,
-                rgba(4, 4, 6, 0.88),
-                transparent
-            );
-            backdrop-filter: blur(5px);
+
+            padding: 13px 16px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 14px;
+
+            background: rgba(8,9,12,.78);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            transition:
+                box-shadow .25s ease,
+                border-color .25s ease;
         }
 
         .logo {
-            color: white;
             text-decoration: none;
+
+            font-size: 1rem;
             font-weight: 800;
-            font-size: 1.15rem;
-            letter-spacing: -0.04em;
+
+            letter-spacing: -.05em;
         }
 
         .logo span {
-            color: var(--purple);
+            color: var(--accent);
         }
 
-        nav ul {
+        .nav-links {
             display: flex;
+            align-items: center;
+
+            gap: 28px;
+
             list-style: none;
-            gap: 30px;
         }
 
-        nav a {
-            color: #aaaab4;
+        .nav-links a {
+            color: var(--muted);
+
             text-decoration: none;
-            font-size: 0.85rem;
-            transition: 0.25s;
+
+            font-size: .8rem;
+            font-weight: 500;
+
+            transition: color .2s ease;
         }
 
-        nav a:hover {
+        .nav-links a:hover {
             color: white;
         }
 
-        /* =========================
-           HERO
-        ========================= */
-
-        .hero {
-            min-height: 100vh;
+        .availability {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 100px 6% 60px;
-            perspective: 1200px;
+
+            gap: 7px;
+
+            color: var(--muted);
+
+            font-size: .72rem;
         }
 
-        .hero-content {
-            width: min(1100px, 100%);
-            text-align: center;
-            transform-style: preserve-3d;
-            transition: transform 0.15s ease-out;
-        }
-
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            padding: 8px 14px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.035);
-            color: #aaaab4;
-            font-size: 0.78rem;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 35px rgba(155, 92, 255, 0.08);
-        }
-
-        .dot {
+        .availability-dot {
             width: 7px;
             height: 7px;
+
             border-radius: 50%;
-            background: #72ff9d;
-            box-shadow: 0 0 12px #72ff9d;
-            animation: pulse 2s infinite;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(99,230,165,.08);
         }
 
-        @keyframes pulse {
-            50% {
-                opacity: 0.35;
-                transform: scale(0.7);
-            }
-        }
+        /* =====================================
+           GLOBAL
+        ===================================== */
 
-        h1 {
-            font-size: clamp(4rem, 13vw, 10rem);
-            line-height: 0.82;
-            letter-spacing: -0.085em;
-            font-weight: 900;
-            background: linear-gradient(
-                110deg,
-                #ffffff 0%,
-                #ffffff 30%,
-                #cdaaff 55%,
-                #7e35ff 85%
+        .container {
+            width: min(
+                var(--max-width),
+                calc(100% - 40px)
             );
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 80px rgba(155, 92, 255, 0.15);
-        }
 
-        .subtitle {
-            margin: 35px auto 0;
-            max-width: 600px;
-            color: var(--muted);
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            line-height: 1.7;
+            margin: auto;
         }
-
-        .subtitle strong {
-            color: #dddde4;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 32px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 13px 21px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: white;
-            font-size: 0.86rem;
-            font-weight: 650;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.045);
-            transition:
-                transform 0.25s,
-                background 0.25s,
-                border 0.25s,
-                box-shadow 0.25s;
-            backdrop-filter: blur(12px);
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(155, 92, 255, 0.4);
-        }
-
-        .btn.primary {
-            background: linear-gradient(
-                135deg,
-                var(--purple2),
-                var(--purple)
-            );
-            border-color: transparent;
-            box-shadow: 0 10px 35px rgba(108, 44, 255, 0.25);
-        }
-
-        .btn.primary:hover {
-            box-shadow: 0 15px 45px rgba(108, 44, 255, 0.4);
-        }
-
-        /* =========================
-           SECTIONS
-        ========================= */
 
         section {
-            width: min(1050px, 88%);
-            margin: auto;
-            padding: 120px 0;
+            padding: 115px 0;
         }
 
-        .section-label {
-            color: var(--purple);
+        .eyebrow {
+            display: flex;
+            align-items: center;
+
+            gap: 9px;
+
+            margin-bottom: 18px;
+
+            color: var(--accent-light);
+
+            font-size: .68rem;
+            font-weight: 750;
+
             text-transform: uppercase;
-            letter-spacing: 0.18em;
-            font-size: 0.68rem;
-            font-weight: 800;
-            margin-bottom: 12px;
+            letter-spacing: .15em;
         }
 
-        .section-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            letter-spacing: -0.055em;
+        .eyebrow::before {
+            content: "";
+
+            width: 20px;
+            height: 1px;
+
+            background: var(--accent);
+        }
+
+        .section-heading {
+            max-width: 680px;
+
             margin-bottom: 45px;
         }
 
-        /* =========================
+        .section-heading h2 {
+            font-size:
+                clamp(
+                    2.1rem,
+                    5vw,
+                    3.4rem
+                );
+
+            line-height: 1.03;
+
+            letter-spacing: -.06em;
+        }
+
+        .section-heading p {
+            max-width: 570px;
+
+            margin-top: 16px;
+
+            color: var(--muted);
+
+            font-size: .92rem;
+
+            line-height: 1.8;
+        }
+
+        /* =====================================
+           BUTTONS
+        ===================================== */
+
+        .button {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 44px;
+
+            padding: 0 18px;
+
+            border-radius: 9px;
+
+            border: 1px solid var(--border);
+
+            background: var(--surface);
+
+            color: var(--text);
+
+            text-decoration: none;
+
+            font-size: .8rem;
+            font-weight: 650;
+
+            cursor: pointer;
+
+            transition:
+                transform .2s ease,
+                background .2s ease,
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+
+            background: var(--surface-2);
+
+            border-color: var(--border-hover);
+        }
+
+        .button.primary {
+            border-color: transparent;
+
+            background: var(--accent);
+
+            color: white;
+
+            box-shadow:
+                0 8px 30px
+                rgba(155,108,255,.2);
+        }
+
+        .button.primary:hover {
+            background: #a77cff;
+
+            box-shadow:
+                0 10px 38px
+                rgba(155,108,255,.3);
+        }
+
+        /* =====================================
+           HERO
+        ===================================== */
+
+        .hero {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+
+            padding-top: 145px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 9px;
+
+            padding: 7px 11px;
+
+            margin-bottom: 25px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: var(--muted);
+
+            font-size: .72rem;
+        }
+
+        .hero-badge .availability-dot {
+            width: 6px;
+            height: 6px;
+        }
+
+        .hero h1 {
+            max-width: 900px;
+
+            font-size:
+                clamp(
+                    4rem,
+                    11vw,
+                    8.5rem
+                );
+
+            line-height: .87;
+
+            letter-spacing: -.09em;
+
+            font-weight: 900;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 650px;
+
+            margin-top: 32px;
+
+            color: var(--muted);
+
+            font-size:
+                clamp(
+                    1rem,
+                    2vw,
+                    1.12rem
+                );
+
+            line-height: 1.8;
+        }
+
+        .hero-description strong {
+            color: var(--text);
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 32px;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 25px;
+
+            margin-top: 65px;
+
+            padding-top: 22px;
+
+            border-top: 1px solid var(--border);
+
+            color: var(--subtle);
+
+            font-size: .72rem;
+        }
+
+        .hero-meta strong {
+            color: var(--muted);
+        }
+
+        /* =====================================
            CARDS
-        ========================= */
+        ===================================== */
 
         .card {
-            position: relative;
-            overflow: hidden;
             border: 1px solid var(--border);
-            border-radius: 18px;
-            background: var(--card);
-            backdrop-filter: blur(20px);
+
+            border-radius: 16px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.035),
+                    rgba(255,255,255,.012)
+                );
+
             box-shadow:
-                0 25px 80px rgba(0, 0, 0, 0.3),
-                inset 0 1px rgba(255, 255, 255, 0.035);
+                0 20px 60px
+                rgba(0,0,0,.14);
+
+            transition:
+                transform .25s ease,
+                border-color .25s ease,
+                background .25s ease;
         }
 
-        .card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(
-                500px circle at var(--mouse-x, 50%)
-                var(--mouse-y, 50%),
-                rgba(155, 92, 255, 0.12),
-                transparent 45%
-            );
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
+        .card:hover {
+            transform: translateY(-3px);
+
+            border-color: var(--border-hover);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.05),
+                    rgba(255,255,255,.018)
+                );
         }
 
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        /* =========================
+        /* =====================================
            ABOUT
-        ========================= */
+        ===================================== */
 
         .about-grid {
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 22px;
+
+            grid-template-columns:
+                1.2fr .8fr;
+
+            gap: 18px;
         }
 
         .about-card {
             padding: 35px;
-            min-height: 280px;
         }
 
         .about-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 18px;
+            margin-bottom: 17px;
+
+            font-size: 1.25rem;
+
+            letter-spacing: -.025em;
         }
 
         .about-card p {
             color: var(--muted);
-            line-height: 1.8;
+
+            font-size: .9rem;
+
+            line-height: 1.85;
+        }
+
+        .about-card p + p {
+            margin-top: 16px;
         }
 
         .about-card strong {
-            color: #dddde5;
+            color: var(--text-soft);
         }
 
-        /* =========================
+        /* =====================================
            TERMINAL
-        ========================= */
+        ===================================== */
 
         .terminal {
-            padding: 0;
             overflow: hidden;
+
+            background: #0a0b0e;
         }
 
-        .terminal-bar {
-            height: 43px;
+        .terminal-header {
+            height: 42px;
+
             display: flex;
             align-items: center;
+
             gap: 7px;
+
             padding: 0 15px;
+
             border-bottom: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.025);
         }
 
         .terminal-dot {
-            width: 9px;
-            height: 9px;
+            width: 8px;
+            height: 8px;
+
             border-radius: 50%;
         }
 
-        .terminal-dot:nth-child(1) {
+        .terminal-dot.red {
             background: #ff5f57;
         }
 
-        .terminal-dot:nth-child(2) {
+        .terminal-dot.yellow {
             background: #febc2e;
         }
 
-        .terminal-dot:nth-child(3) {
+        .terminal-dot.green {
             background: #28c840;
         }
 
-        pre {
-            padding: 27px;
+        .terminal-title {
+            margin-left: 8px;
+
+            color: var(--subtle);
+
+            font:
+                .67rem
+                monospace;
+        }
+
+        .terminal pre {
+            padding: 28px;
+
             overflow-x: auto;
-            color: #bdbdc9;
-            font: 0.82rem/1.8 "SFMono-Regular", Consolas, monospace;
+
+            color: #abb0bb;
+
+            font:
+                .78rem/1.85
+                "SFMono-Regular",
+                Consolas,
+                monospace;
         }
 
         .purple {
-            color: #bd83ff;
+            color: #b99cff;
         }
 
         .blue {
-            color: #70b7ff;
+            color: #82b9ff;
         }
 
         .green {
-            color: #79e6a0;
+            color: #72dca4;
         }
 
-        .gray {
-            color: #676775;
+        .comment {
+            color: #4e535d;
         }
 
-        /* =========================
+        /* =====================================
            SKILLS
-        ========================= */
+        ===================================== */
 
         .skills {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 14px;
         }
 
         .skill {
+            min-height: 195px;
+
             padding: 25px;
-            transition:
-                transform 0.35s,
-                border 0.35s;
         }
 
-        .skill:hover {
-            transform:
-                translateY(-7px)
-                rotateX(2deg);
-            border-color: rgba(155, 92, 255, 0.3);
+        .skill-number {
+            color: #4f535d;
+
+            font:
+                .65rem
+                monospace;
         }
 
         .skill-icon {
-            width: 46px;
-            height: 46px;
+            width: 42px;
+            height: 42px;
+
             display: grid;
             place-items: center;
-            border-radius: 12px;
-            margin-bottom: 18px;
+
+            margin:
+                25px 0 18px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid
+                rgba(155,108,255,.18);
+
             background:
-                linear-gradient(
-                    135deg,
-                    rgba(155, 92, 255, 0.22),
-                    rgba(66, 232, 255, 0.07)
-                );
-            border: 1px solid rgba(155, 92, 255, 0.2);
-            color: #c49aff;
-            font-weight: 900;
-            font-family: monospace;
+                rgba(155,108,255,.08);
+
+            color: var(--accent-light);
+
+            font:
+                700 .68rem
+                monospace;
         }
 
         .skill h3 {
             margin-bottom: 8px;
+
+            font-size: .95rem;
         }
 
         .skill p {
             color: var(--muted);
+
+            font-size: .77rem;
+
             line-height: 1.65;
-            font-size: 0.88rem;
         }
 
-        /* =========================
+        /* =====================================
            PROJECTS
-        ========================= */
+        ===================================== */
 
         .projects {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 16px;
         }
 
         .project {
-            min-height: 260px;
-            padding: 28px;
+            position: relative;
+
+            min-height: 335px;
+
+            padding: 30px;
+
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: 0.35s;
-            transform-style: preserve-3d;
+
+            overflow: hidden;
         }
 
-        .project:hover {
-            transform:
-                translateY(-8px)
-                rotateX(2deg)
-                rotateY(-2deg);
+        .project::after {
+            content: "";
 
-            border-color: rgba(155, 92, 255, 0.32);
+            position: absolute;
 
-            box-shadow:
-                0 25px 80px rgba(80, 30, 180, 0.12);
+            width: 250px;
+            height: 250px;
+
+            right: -150px;
+            bottom: -150px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(155,108,255,.08);
+
+            filter: blur(50px);
+
+            pointer-events: none;
+        }
+
+        .project-top {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
         }
 
         .project-number {
-            color: #575762;
-            font: 0.72rem monospace;
+            color: var(--subtle);
+
+            font:
+                .67rem
+                monospace;
+        }
+
+        .project-status {
+            padding: 5px 9px;
+
+            border-radius: 999px;
+
+            font:
+                .62rem
+                monospace;
+        }
+
+        .project-status.cancelled {
+            color: var(--red);
+
+            border:
+                1px solid
+                rgba(255,114,125,.18);
+
+            background:
+                rgba(255,114,125,.05);
+        }
+
+        .project-status.active {
+            color: var(--green);
+
+            border:
+                1px solid
+                rgba(99,230,165,.18);
+
+            background:
+                rgba(99,230,165,.05);
         }
 
         .project h3 {
-            margin-top: 30px;
-            font-size: 1.35rem;
+            margin-top: 55px;
+
+            font-size: 1.45rem;
+
+            letter-spacing: -.035em;
         }
 
-        .project p {
+        .project-description {
+            max-width: 520px;
+
+            margin-top: 12px;
+
             color: var(--muted);
-            margin-top: 10px;
-            line-height: 1.65;
-            font-size: 0.88rem;
+
+            font-size: .84rem;
+
+            line-height: 1.75;
         }
 
         .tags {
             display: flex;
-            gap: 7px;
+
             flex-wrap: wrap;
-            margin-top: 20px;
+
+            gap: 7px;
+
+            margin-top: 25px;
         }
 
         .tag {
-            color: #aaaab5;
-            border: 1px solid var(--border);
-            border-radius: 999px;
             padding: 5px 9px;
-            font: 0.68rem monospace;
-            background: rgba(255, 255, 255, 0.025);
+
+            border: 1px solid var(--border);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,.02);
+
+            color: var(--muted);
+
+            font:
+                .64rem
+                monospace;
         }
 
-        .tag.cancelled {
-            color: #ff858f;
-            border-color: rgba(255, 95, 109, 0.22);
-            background: rgba(255, 95, 109, 0.05);
-        }
-
-        .tag.wip {
-            color: #7dffad;
-            border-color: rgba(93, 255, 154, 0.22);
-            background: rgba(93, 255, 154, 0.05);
-        }
-
-        /* =========================
+        /* =====================================
            CONTACT
-        ========================= */
+        ===================================== */
 
         .contact {
+            padding-bottom: 100px;
+        }
+
+        .contact-card {
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 70px 30px;
+
             text-align: center;
-            padding-bottom: 80px;
         }
 
-        .contact-box {
-            padding: 60px 25px;
+        .contact-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 500px;
+            height: 250px;
+
+            top: -180px;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            border-radius: 50%;
+
+            background:
+                rgba(155,108,255,.12);
+
+            filter: blur(80px);
+
+            pointer-events: none;
         }
 
-        .contact h2 {
-            font-size: clamp(2.2rem, 6vw, 4.5rem);
-            letter-spacing: -0.065em;
-            margin-bottom: 15px;
+        .contact-card .eyebrow {
+            justify-content: center;
         }
 
-        .contact p {
+        .contact-card h2 {
+            position: relative;
+
+            font-size:
+                clamp(
+                    2.2rem,
+                    6vw,
+                    4rem
+                );
+
+            line-height: 1;
+
+            letter-spacing: -.065em;
+        }
+
+        .contact-card p {
+            position: relative;
+
+            max-width: 500px;
+
+            margin: 18px auto 0;
+
             color: var(--muted);
-            margin-bottom: 30px;
+
+            font-size: .88rem;
         }
 
         .discord {
-            color: #b98aff;
+            color: var(--accent-light);
+
             font-family: monospace;
         }
 
-        /* =========================
+        .contact-buttons {
+            position: relative;
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 30px;
+        }
+
+        /* =====================================
            FOOTER
-        ========================= */
+        ===================================== */
 
         footer {
             border-top: 1px solid var(--border);
-            padding: 25px 6%;
-            color: #555560;
-            font-size: 0.72rem;
+
+            padding: 25px 20px;
+
+            color: var(--subtle);
+
+            font-size: .68rem;
+        }
+
+        .footer-inner {
+            width: min(
+                var(--max-width),
+                100%
+            );
+
+            margin: auto;
+
             display: flex;
+
             justify-content: space-between;
+
             gap: 20px;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================= */
+        /* =====================================
+           REVEAL
+        ===================================== */
 
-        @media (max-width: 750px) {
+        .reveal {
+            opacity: 0;
 
-            nav {
-                padding: 18px 5%;
-            }
+            transform: translateY(18px);
 
-            nav ul {
-                gap: 14px;
-            }
+            transition:
+                opacity .7s ease,
+                transform .7s ease;
+        }
 
-            nav li:nth-child(2) {
+        .reveal.visible {
+            opacity: 1;
+
+            transform: translateY(0);
+        }
+
+        /* =====================================
+           MOBILE
+        ===================================== */
+
+        @media (max-width: 900px) {
+
+            .availability {
                 display: none;
             }
 
-            .hero {
-                padding-top: 120px;
-            }
-
-            .about-grid,
-            .skills,
-            .projects {
+            .about-grid {
                 grid-template-columns: 1fr;
             }
 
+            .skills {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .projects {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .nav-container {
+                padding: 10px 12px;
+            }
+
+            nav {
+                padding: 11px 13px;
+            }
+
+            .nav-links {
+                gap: 14px;
+            }
+
+            .nav-links a {
+                font-size: .7rem;
+            }
+
+            .container {
+                width:
+                    calc(100% - 28px);
+            }
+
             section {
-                padding: 85px 0;
+                padding: 80px 0;
             }
 
-            .about-card {
-                min-height: auto;
+            .hero {
+                padding-top: 130px;
             }
 
-            footer {
+            .hero h1 {
+                font-size:
+                    clamp(
+                        3.8rem,
+                        18vw,
+                        6rem
+                    );
+            }
+
+            .hero-buttons {
+                width: 100%;
+            }
+
+            .hero-buttons .button {
+                flex: 1;
+            }
+
+            .hero-meta {
+                gap: 13px;
+
+                margin-top: 45px;
+            }
+
+            .skills {
+                grid-template-columns: 1fr;
+            }
+
+            .about-card,
+            .project {
+                padding: 25px;
+            }
+
+            .contact-card {
+                padding: 55px 22px;
+            }
+
+            .footer-inner {
                 flex-direction: column;
+
                 text-align: center;
             }
         }
@@ -660,9 +1118,15 @@
             }
 
             *,
-            *::before {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
             }
         }
     </style>
@@ -670,88 +1134,144 @@
 
 <body>
 
-    <canvas id="canvas"></canvas>
-
-    <div class="noise"></div>
-
-    <div class="orb one"></div>
-    <div class="orb two"></div>
+    <div class="glow"></div>
+    <div class="grid"></div>
 
 
-    <!-- =========================
+    <!-- =========================================
          NAVIGATION
-    ========================= -->
+    ========================================= -->
 
-    <nav>
+    <header class="nav-container">
 
-        <a href="#" class="logo">
-            Nyx<span>.cs</span>
-        </a>
+        <nav>
 
-        <ul>
-            <li>
-                <a href="#about">About</a>
-            </li>
-
-            <li>
-                <a href="#skills">Skills</a>
-            </li>
-
-            <li>
-                <a href="#projects">Projects</a>
-            </li>
-
-            <li>
-                <a href="#contact">Contact</a>
-            </li>
-        </ul>
-
-    </nav>
+            <a
+                href="#top"
+                class="logo"
+            >
+                Nyx<span>.cs</span>
+            </a>
 
 
-    <!-- =========================
-         MAIN
-    ========================= -->
+            <ul class="nav-links">
 
-    <main>
+                <li>
+                    <a href="#about">
+                        About
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#skills">
+                        Skills
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#projects">
+                        Projects
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#contact">
+                        Contact
+                    </a>
+                </li>
+
+            </ul>
 
 
-        <!-- HERO -->
+            <div class="availability">
+
+                <span class="availability-dot"></span>
+
+                Available for projects
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    <main id="top">
+
+
+        <!-- =========================================
+             HERO
+        ========================================= -->
 
         <section class="hero">
 
-            <div class="hero-content" id="heroContent">
+            <div class="container">
 
-                <div class="status">
-                    <span class="dot"></span>
-                    Currently building
-                </div>
+                <div class="hero-content reveal">
 
-                <h1>Nyx.cs</h1>
+                    <div class="hero-badge">
 
-                <p class="subtitle">
-                    <strong>C++ developer.</strong>
-                    Systems, software, game engines,
-                    and whatever interesting thing I decide
-                    to build next.
-                    Occasionally writing C# too.
-                </p>
+                        <span class="availability-dot"></span>
 
-                <div class="buttons">
+                        C++ Developer
 
-                    <a
-                        class="btn primary"
-                        href="#projects"
-                    >
-                        View Projects
-                    </a>
+                    </div>
 
-                    <a
-                        class="btn"
-                        href="#contact"
-                    >
-                        Contact Me
-                    </a>
+
+                    <h1>
+                        Building
+                        <span>software</span>
+                        from the ground up.
+                    </h1>
+
+
+                    <p class="hero-description">
+
+                        I'm Nyx — a developer focused on
+                        <strong>C++</strong>, systems programming,
+                        game engines, and understanding how
+                        software works under the hood.
+
+                    </p>
+
+
+                    <div class="hero-buttons">
+
+                        <a
+                            href="#projects"
+                            class="button primary"
+                        >
+                            View my work
+                        </a>
+
+                        <a
+                            href="#contact"
+                            class="button"
+                        >
+                            Get in touch
+                        </a>
+
+                    </div>
+
+
+                    <div class="hero-meta">
+
+                        <span>
+                            <strong>Primary:</strong>
+                            C++
+                        </span>
+
+                        <span>
+                            <strong>Also:</strong>
+                            C#
+                        </span>
+
+                        <span>
+                            <strong>Focus:</strong>
+                            Game & Systems
+                        </span>
+
+                    </div>
 
                 </div>
 
@@ -760,77 +1280,104 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =========================================
              ABOUT
-        ========================= -->
+        ========================================= -->
 
         <section id="about">
 
-            <div class="section-label">
-                01 / About
-            </div>
+            <div class="container">
 
-            <h2 class="section-title">
-                Built from curiosity.
-            </h2>
+                <div class="section-heading reveal">
 
+                    <div class="eyebrow">
+                        About
+                    </div>
 
-            <div class="about-grid">
-
-
-                <div class="card about-card">
-
-                    <h3>
-                        Hey, I'm Nyx.
-                    </h3>
+                    <h2>
+                        Curious about how
+                        things actually work.
+                    </h2>
 
                     <p>
-                        I'm a developer who mainly works with
-                        <strong>C++</strong>, with occasional side
-                        quests into <strong>C#</strong>.
-                    </p>
-
-                    <br>
-
-                    <p>
-                        I enjoy building software, experimenting
-                        with lower-level concepts, and turning
-                        random ideas into actual projects.
-                    </p>
-
-                    <br>
-
-                    <p>
-                        I'm especially interested in game engines,
-                        systems programming, and figuring out how
-                        things work under the hood.
+                        I like working close to the code,
+                        learning through experimentation,
+                        and turning ideas into working software.
                     </p>
 
                 </div>
 
 
-                <div class="card terminal">
-
-                    <div class="terminal-bar">
-
-                        <span class="terminal-dot"></span>
-                        <span class="terminal-dot"></span>
-                        <span class="terminal-dot"></span>
-
-                    </div>
+                <div class="about-grid">
 
 
-                    <pre><span class="gray">// nyx.cpp</span>
+                    <article class="card about-card reveal">
+
+                        <h3>
+                            A little about me
+                        </h3>
+
+                        <p>
+                            I'm a developer who primarily works
+                            with <strong>C++</strong>, with
+                            occasional projects in <strong>C#</strong>.
+                        </p>
+
+                        <p>
+                            My interests are centered around
+                            game engines, systems programming,
+                            software architecture, and the
+                            lower-level concepts that make
+                            applications work.
+                        </p>
+
+                        <p>
+                            Most of my learning comes from
+                            building things, breaking them,
+                            figuring out why they broke,
+                            and building them better.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card terminal reveal">
+
+                        <div class="terminal-header">
+
+                            <span
+                                class="terminal-dot red"
+                            ></span>
+
+                            <span
+                                class="terminal-dot yellow"
+                            ></span>
+
+                            <span
+                                class="terminal-dot green"
+                            ></span>
+
+                            <span class="terminal-title">
+                                nyx.cpp
+                            </span>
+
+                        </div>
+
+
+                        <pre><span class="comment">// keep building</span>
 
 <span class="purple">#include</span> <span class="green">&lt;iostream&gt;</span>
 
-<span class="purple">int</span> main() {
+<span class="purple">int</span> main()
+{
     std::cout &lt;&lt;
         <span class="green">"Hello, world."</span>;
 
     <span class="purple">return</span> <span class="blue">0</span>;
 }</pre>
 
+                    </article>
+
                 </div>
 
             </div>
@@ -838,264 +1385,330 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =========================================
              SKILLS
-        ========================= -->
+        ========================================= -->
 
         <section id="skills">
 
-            <div class="section-label">
-                02 / Skills
-            </div>
+            <div class="container">
 
-            <h2 class="section-title">
-                What I work with.
-            </h2>
+                <div class="section-heading reveal">
 
-
-            <div class="skills">
-
-
-                <div class="card skill">
-
-                    <div class="skill-icon">
-                        C++
+                    <div class="eyebrow">
+                        Skills
                     </div>
 
-                    <h3>
-                        C++
-                    </h3>
+                    <h2>
+                        Tools I use to build.
+                    </h2>
 
                     <p>
-                        My primary language. Used for performance-focused
-                        software, systems, tooling, game engines,
-                        and experimentation.
+                        A practical set of technologies
+                        and skills I use across my projects.
                     </p>
 
                 </div>
 
 
-                <div class="card skill">
+                <div class="skills">
 
-                    <div class="skill-icon">
-                        C#
-                    </div>
 
-                    <h3>
-                        C#
-                    </h3>
+                    <article class="card skill reveal">
 
-                    <p>
-                        A secondary language I use when the project,
-                        framework, or idea calls for it.
-                    </p>
+                        <span class="skill-number">
+                            01
+                        </span>
+
+                        <div class="skill-icon">
+                            C++
+                        </div>
+
+                        <h3>
+                            C++
+                        </h3>
+
+                        <p>
+                            My primary language for
+                            performance-focused software,
+                            systems, tooling, and game engines.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card skill reveal">
+
+                        <span class="skill-number">
+                            02
+                        </span>
+
+                        <div class="skill-icon">
+                            C#
+                        </div>
+
+                        <h3>
+                            C#
+                        </h3>
+
+                        <p>
+                            Used for projects where its
+                            ecosystem and frameworks make
+                            sense for the job.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card skill reveal">
+
+                        <span class="skill-number">
+                            03
+                        </span>
+
+                        <div class="skill-icon">
+                            SYS
+                        </div>
+
+                        <h3>
+                            Systems
+                        </h3>
+
+                        <p>
+                            Interested in low-level concepts,
+                            architecture, performance, and
+                            software internals.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card skill reveal">
+
+                        <span class="skill-number">
+                            04
+                        </span>
+
+                        <div class="skill-icon">
+                            DEV
+                        </div>
+
+                        <h3>
+                            Problem Solving
+                        </h3>
+
+                        <p>
+                            Breaking complex problems into
+                            smaller, understandable,
+                            maintainable pieces.
+                        </p>
+
+                    </article>
+
 
                 </div>
-
-
-                <div class="card skill">
-
-                    <div class="skill-icon">
-                        { }
-                    </div>
-
-                    <h3>
-                        Problem Solving
-                    </h3>
-
-                    <p>
-                        Breaking complicated ideas into smaller
-                        pieces and turning them into working code.
-                    </p>
-
-                </div>
-
-
-                <div class="card skill">
-
-                    <div class="skill-icon">
-                        &gt;_
-                    </div>
-
-                    <h3>
-                        Development
-                    </h3>
-
-                    <p>
-                        Building, debugging, testing, and continuously
-                        improving projects.
-                    </p>
-
-                </div>
-
 
             </div>
 
         </section>
 
 
-        <!-- =========================
+        <!-- =========================================
              PROJECTS
-        ========================= -->
+        ========================================= -->
 
         <section id="projects">
 
-            <div class="section-label">
-                03 / Projects
-            </div>
+            <div class="container">
 
-            <h2 class="section-title">
-                Things I've built.
-            </h2>
+                <div class="section-heading reveal">
 
-
-            <div class="projects">
-
-
-                <!-- BAGE -->
-
-                <article class="card project">
-
-                    <div>
-
-                        <span class="project-number">
-                            PROJECT / 01
-                        </span>
-
-                        <h3>
-                            Bage
-                        </h3>
-
-                        <p>
-                            BlackCloud Advanced Game Engine.
-                            An ambitious game-engine project focused
-                            on experimenting with engine architecture,
-                            systems, and low-level C++ development.
-                        </p>
-
+                    <div class="eyebrow">
+                        Projects
                     </div>
 
+                    <h2>
+                        Things I've built.
+                    </h2>
 
-                    <div class="tags">
+                    <p>
+                        Projects, experiments, and ideas
+                        I've worked on.
+                    </p>
 
-                        <span class="tag">
-                            C++
-                        </span>
-
-                        <span class="tag">
-                            Game Engine
-                        </span>
-
-                        <span class="tag cancelled">
-                            CANCELLED
-                        </span>
-
-                    </div>
-
-                </article>
+                </div>
 
 
-                <!-- RAGE -->
-
-                <article class="card project">
-
-                    <div>
-
-                        <span class="project-number">
-                            PROJECT / 02
-                        </span>
-
-                        <h3>
-                            Rage Retarted ass game engine
-                        </h3>
-
-                        <p>
-                            A new game-engine project currently
-                            in development. Built from the ground
-                            up as an ongoing experiment in C++,
-                            engine architecture, rendering,
-                            and game-development systems.
-                        </p>
-
-                    </div>
+                <div class="projects">
 
 
-                    <div class="tags">
+                    <!-- BAGE -->
 
-                        <span class="tag">
-                            C++
-                        </span>
+                    <article class="card project reveal">
 
-                        <span class="tag">
-                            Game Engine
-                        </span>
+                        <div>
 
-                        <span class="tag wip">
-                            IN THE WORKS
-                        </span>
+                            <div class="project-top">
 
-                    </div>
+                                <span class="project-number">
+                                    PROJECT / 01
+                                </span>
 
-                </article>
+                                <span
+                                    class="project-status cancelled"
+                                >
+                                    CANCELLED
+                                </span>
 
+                            </div>
+
+
+                            <h3>
+                                Bage
+                            </h3>
+
+
+                            <p class="project-description">
+                                BlackCloud Advanced Game Engine.
+                                An ambitious C++ game-engine project
+                                exploring engine architecture,
+                                systems, and low-level development.
+                            </p>
+
+                        </div>
+
+
+                        <div class="tags">
+
+                            <span class="tag">
+                                C++
+                            </span>
+
+                            <span class="tag">
+                                Game Engine
+                            </span>
+
+                            <span class="tag">
+                                Architecture
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- RAGE -->
+
+                    <article class="card project reveal">
+
+                        <div>
+
+                            <div class="project-top">
+
+                                <span class="project-number">
+                                    PROJECT / 02
+                                </span>
+
+                                <span
+                                    class="project-status active"
+                                >
+                                    IN DEVELOPMENT
+                                </span>
+
+                            </div>
+
+
+                            <h3>
+                                RAGE
+                            </h3>
+
+
+                            <p class="project-description">
+                                A new game-engine project being
+                                developed from the ground up.
+                                Focused on C++, engine architecture,
+                                rendering, and game-development
+                                systems.
+                            </p>
+
+                        </div>
+
+
+                        <div class="tags">
+
+                            <span class="tag">
+                                C++
+                            </span>
+
+                            <span class="tag">
+                                Game Engine
+                            </span>
+
+                            <span class="tag">
+                                Rendering
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                </div>
 
             </div>
 
         </section>
 
 
-        <!-- =========================
+        <!-- =========================================
              CONTACT
-        ========================= -->
+        ========================================= -->
 
         <section
             id="contact"
             class="contact"
         >
 
-            <div class="card contact-box">
+            <div class="container">
 
-                <div class="section-label">
-                    04 / Contact
-                </div>
+                <div class="card contact-card reveal">
 
-                <h2>
-                    Let's build something.
-                </h2>
-
-                <p>
-                    Find me on Discord:
-                    <span class="discord">
-                        @ne0dev223
-                    </span>
-                </p>
+                    <div class="eyebrow">
+                        Contact
+                    </div>
 
 
-                <div class="buttons">
-
-                    <button
-                        class="btn primary"
-                        id="copyDiscord"
-                    >
-                        Copy Discord
-                    </button>
+                    <h2>
+                        Let's build something.
+                    </h2>
 
 
-                    <!--
-                        REPLACE # WITH YOUR GITHUB URL.
+                    <p>
+                        Want to talk about a project,
+                        development, or software?
 
-                        Example:
-                        https://github.com/yourusername
-                    -->
+                        Find me on Discord at
+                        <span class="discord">
+                            @ne0dev223
+                        </span>.
+                    </p>
 
-                    <a
-                        class="btn"
-                        href="#"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        GitHub
-                    </a>
+
+                    <div class="contact-buttons">
+
+                        <button
+                            class="button primary"
+                            id="copyDiscord"
+                            type="button"
+                        >
+                            Copy Discord
+                        </button>
+
+
+                       
+                        </a>
+
+                    </div>
 
                 </div>
 
@@ -1106,286 +1719,78 @@
     </main>
 
 
-    <!-- =========================
+    <!-- =========================================
          FOOTER
-    ========================= -->
+    ========================================= -->
 
     <footer>
 
-        <span>
-            © 2026 Nyx.cs
-        </span>
+        <div class="footer-inner">
 
-        <span>
-            Built with C++ brainrot &lt;3
-        </span>
+            <span>
+                © 2026 Nyx.cs
+            </span>
+
+            <span>
+                C++ · Systems · Game Development
+            </span>
+
+        </div>
 
     </footer>
 
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================= -->
-
     <script>
 
-        /* =====================================================
-           3D STAR / PARTICLE BACKGROUND
-        ===================================================== */
+        /* =====================================
+           SCROLL REVEAL
+        ===================================== */
 
-        const canvas =
-            document.getElementById("canvas");
-
-        const ctx =
-            canvas.getContext("2d");
-
-        let width;
-        let height;
-
-        let particles = [];
-
-
-        function resize() {
-
-            width =
-                canvas.width =
-                window.innerWidth;
-
-            height =
-                canvas.height =
-                window.innerHeight;
-
-
-            const amount =
-                Math.min(
-                    180,
-                    Math.floor(
-                        (width * height) / 9000
-                    )
-                );
-
-
-            particles = [];
-
-
-            for (let i = 0; i < amount; i++) {
-
-                particles.push({
-
-                    x:
-                        Math.random() * width,
-
-                    y:
-                        Math.random() * height,
-
-                    z:
-                        Math.random() * 2 + 0.2,
-
-                    size:
-                        Math.random() * 1.5 + 0.2,
-
-                    speed:
-                        Math.random() * 0.18 + 0.03
-
-                });
-
-            }
-
-        }
-
-
-        window.addEventListener(
-            "resize",
-            resize
-        );
-
-        resize();
-
-
-        let mouseX =
-            window.innerWidth / 2;
-
-        let mouseY =
-            window.innerHeight / 2;
-
-
-        window.addEventListener(
-            "mousemove",
-            event => {
-
-                mouseX =
-                    event.clientX;
-
-                mouseY =
-                    event.clientY;
-
-            }
-        );
-
-
-        function drawParticles() {
-
-            ctx.clearRect(
-                0,
-                0,
-                width,
-                height
+        const elements =
+            document.querySelectorAll(
+                ".reveal"
             );
 
 
-            const offsetX =
-                (mouseX - width / 2) * 0.012;
+        const observer =
+            new IntersectionObserver(
+                entries => {
 
-            const offsetY =
-                (mouseY - height / 2) * 0.012;
+                    entries.forEach(entry => {
 
+                        if (
+                            entry.isIntersecting
+                        ) {
 
-            for (const p of particles) {
+                            entry.target.classList.add(
+                                "visible"
+                            );
 
-                p.y += p.speed;
+                            observer.unobserve(
+                                entry.target
+                            );
 
+                        }
 
-                if (p.y > height + 10) {
+                    });
 
-                    p.y = -10;
-
-                    p.x =
-                        Math.random() * width;
-
+                },
+                {
+                    threshold: .1
                 }
-
-
-                const x =
-                    p.x +
-                    offsetX * p.z;
-
-                const y =
-                    p.y +
-                    offsetY * p.z;
-
-
-                const alpha =
-                    0.15 +
-                    p.z * 0.2;
-
-
-                ctx.beginPath();
-
-                ctx.arc(
-                    x,
-                    y,
-                    p.size * p.z,
-                    0,
-                    Math.PI * 2
-                );
-
-                ctx.fillStyle =
-                    `rgba(170, 120, 255, ${alpha})`;
-
-                ctx.fill();
-
-            }
-
-
-            requestAnimationFrame(
-                drawParticles
-            );
-
-        }
-
-
-        drawParticles();
-
-
-        /* =====================================================
-           HERO 3D MOUSE EFFECT
-        ===================================================== */
-
-        const hero =
-            document.getElementById(
-                "heroContent"
             );
 
 
-        window.addEventListener(
-            "mousemove",
-            event => {
+        elements.forEach(element => {
 
-                if (
-                    window.innerWidth < 700
-                ) {
-                    return;
-                }
+            observer.observe(element);
+
+        });
 
 
-                const x =
-                    event.clientX /
-                    window.innerWidth -
-                    0.5;
-
-
-                const y =
-                    event.clientY /
-                    window.innerHeight -
-                    0.5;
-
-
-                hero.style.transform = `
-                    rotateX(${y * -4}deg)
-                    rotateY(${x * 5}deg)
-                    translateZ(15px)
-                `;
-
-            }
-        );
-
-
-        /* =====================================================
-           3D CARD LIGHTING
-        ===================================================== */
-
-        document
-            .querySelectorAll(".card")
-            .forEach(card => {
-
-                card.addEventListener(
-                    "mousemove",
-                    event => {
-
-                        const rect =
-                            card.getBoundingClientRect();
-
-
-                        const x =
-                            event.clientX -
-                            rect.left;
-
-
-                        const y =
-                            event.clientY -
-                            rect.top;
-
-
-                        card.style.setProperty(
-                            "--mouse-x",
-                            `${x}px`
-                        );
-
-
-                        card.style.setProperty(
-                            "--mouse-y",
-                            `${y}px`
-                        );
-
-                    }
-                );
-
-            });
-
-
-        /* =====================================================
+        /* =====================================
            COPY DISCORD
-        ===================================================== */
+        ===================================== */
 
         const copyButton =
             document.getElementById(
@@ -1399,47 +1804,34 @@
 
                 try {
 
-                    await navigator.clipboard
-                        .writeText(
-                            "@ne0dev223"
-                        );
-
+                    await navigator.clipboard.writeText(
+                        "@ne0dev223"
+                    );
 
                     const original =
                         copyButton.textContent;
 
-
                     copyButton.textContent =
                         "Copied!";
 
+                    setTimeout(() => {
 
-                    setTimeout(
-                        () => {
+                        copyButton.textContent =
+                            original;
 
-                            copyButton.textContent =
-                                original;
+                    }, 1600);
 
-                        },
-                        1800
-                    );
-
-                }
-
-                catch {
+                } catch {
 
                     copyButton.textContent =
                         "Copy failed";
 
+                    setTimeout(() => {
 
-                    setTimeout(
-                        () => {
+                        copyButton.textContent =
+                            "Copy Discord";
 
-                            copyButton.textContent =
-                                "Copy Discord";
-
-                        },
-                        1800
-                    );
+                    }, 1600);
 
                 }
 
@@ -1447,59 +1839,93 @@
         );
 
 
-        /* =====================================================
-           SCROLL REVEAL
-        ===================================================== */
+        /* =====================================
+           NAV SCROLL EFFECT
+        ===================================== */
 
-        const observer =
-            new IntersectionObserver(
-                entries => {
+        const nav =
+            document.querySelector("nav");
 
-                    entries.forEach(
-                        entry => {
 
-                            if (
-                                entry.isIntersecting
-                            ) {
+        window.addEventListener(
+            "scroll",
+            () => {
 
-                                entry.target.style.opacity =
-                                    "1";
+                if (
+                    window.scrollY > 20
+                ) {
 
-                                entry.target.style.transform =
-                                    "translateY(0)";
+                    nav.style.boxShadow =
+                        "0 15px 50px rgba(0,0,0,.35)";
 
-                            }
+                    nav.style.borderColor =
+                        "rgba(255,255,255,.12)";
 
-                        }
-                    );
+                } else {
 
-                },
-                {
-                    threshold: 0.08
+                    nav.style.boxShadow =
+                        "none";
+
+                    nav.style.borderColor =
+                        "rgba(255,255,255,.08)";
+
                 }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* =====================================
+           SUBTLE HERO MOVEMENT
+        ===================================== */
+
+        const hero =
+            document.querySelector(
+                ".hero-content"
             );
 
 
-        document
-            .querySelectorAll(
-                ".card, .section-title, .section-label"
-            )
-            .forEach(element => {
+        const reducedMotion =
+            window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            ).matches;
 
-                element.style.opacity =
-                    "0";
 
-                element.style.transform =
-                    "translateY(18px)";
+        if (!reducedMotion) {
 
-                element.style.transition =
-                    "opacity .7s ease, transform .7s ease";
+            window.addEventListener(
+                "mousemove",
+                event => {
 
-                observer.observe(
-                    element
-                );
+                    if (
+                        window.innerWidth < 800
+                    ) {
+                        return;
+                    }
 
-            });
+                    const x =
+                        event.clientX /
+                        window.innerWidth -
+                        .5;
+
+                    const y =
+                        event.clientY /
+                        window.innerHeight -
+                        .5;
+
+                    hero.style.transform =
+                        `translate(
+                            ${x * 3}px,
+                            ${y * 3}px
+                        )`;
+
+                }
+            );
+
+        }
 
     </script>
 
