@@ -1,29 +1,1850 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Nyx.cs — C++ developer focused on systems programming, game engines, and software development.">
-<meta name="theme-color" content="#ffffff">
-<title>Nyx.cs — C++ Developer</title>
-<style>
-:root{
-    --bg:#f7f7f5;
-    --surface:#ffffff;
-    --surface-2:#f0f0ed;
-    --text:#111111;
-    --muted:#666666;
-    --subtle:#929292;
-    --line:#deded9;
-    --accent:#111111;
-    --accent-contrast:#ffffff;
-    --shadow:0 20px 60px rgba(0,0,0,.07);
-    --max:1180px;
-}
-[data-theme="dark"]{
-    --bg:#090909;
-    --surface:#111111;
-    --surface-2:#181818;
-    --text:#f5f5f2;
-    --muted:#a0a09b;
-    --subtle:#686864;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Nyx.cs — C++ developer focused on systems programming, game engines, and software development."
+    >
+
+    <title>Nyx.cs — C++ Developer</title>
+
+    <style>
+        :root {
+            --bg: #f7f7f5;
+            --surface: #ffffff;
+            --surface-2: #f0f0ed;
+
+            --text: #111111;
+            --muted: #666666;
+            --subtle: #929292;
+
+            --border: #deded9;
+
+            --accent: #111111;
+            --accent-text: #ffffff;
+
+            --shadow: 0 20px 60px rgba(0, 0, 0, .07);
+
+            --max-width: 1180px;
+        }
+
+        [data-theme="dark"] {
+            --bg: #090909;
+            --surface: #111111;
+            --surface-2: #181818;
+
+            --text: #f5f5f2;
+            --muted: #a0a09b;
+            --subtle: #686864;
+
+            --border: #292929;
+
+            --accent: #ffffff;
+            --accent-text: #090909;
+
+            --shadow: 0 24px 70px rgba(0, 0, 0, .35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background: var(--bg);
+            color: var(--text);
+
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            line-height: 1.6;
+
+            transition:
+                background .25s ease,
+                color .25s ease;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        ::selection {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .container {
+            width: min(
+                var(--max-width),
+                calc(100% - 40px)
+            );
+
+            margin: auto;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        header {
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+
+            padding: 16px 20px;
+
+            z-index: 100;
+        }
+
+        nav {
+            width: min(
+                var(--max-width),
+                100%
+            );
+
+            min-height: 58px;
+
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 24px;
+
+            padding:
+                0
+                12px
+                0
+                18px;
+
+            background:
+                color-mix(
+                    in srgb,
+                    var(--surface) 88%,
+                    transparent
+                );
+
+            border: 1px solid var(--border);
+
+            border-radius: 14px;
+
+            backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, .04);
+        }
+
+        .logo {
+            text-decoration: none;
+
+            font-size: 1rem;
+            font-weight: 850;
+
+            letter-spacing: -.04em;
+        }
+
+        .logo span {
+            color: var(--muted);
+        }
+
+        .nav-links {
+            display: flex;
+
+            list-style: none;
+
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+
+            color: var(--muted);
+
+            font-size: .82rem;
+            font-weight: 600;
+
+            transition:
+                color .2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 9px;
+        }
+
+        .availability {
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            color: var(--muted);
+
+            font-size: .72rem;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #2e9b68;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(46, 155, 104, .12);
+        }
+
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 10px;
+
+            background: var(--surface-2);
+
+            color: var(--text);
+
+            cursor: pointer;
+
+            display: grid;
+            place-items: center;
+
+            font-size: .9rem;
+
+            transition:
+                transform .2s ease,
+                border-color .2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+
+            border-color: var(--text);
+        }
+
+        /* =========================
+           GENERAL
+        ========================= */
+
+        section {
+            padding: 110px 0;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+
+            padding-top: 150px;
+            padding-bottom: 90px;
+        }
+
+        .hero-inner {
+            display: grid;
+
+            grid-template-columns:
+                1.4fr
+                .6fr;
+
+            gap: 80px;
+
+            align-items: end;
+        }
+
+        .kicker {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 9px;
+
+            padding: 7px 11px;
+
+            margin-bottom: 24px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 999px;
+
+            color: var(--muted);
+
+            background: var(--surface);
+
+            font-size: .72rem;
+            font-weight: 650;
+        }
+
+        h1 {
+            max-width: 900px;
+
+            font-size:
+                clamp(
+                    4.2rem,
+                    9.5vw,
+                    8.7rem
+                );
+
+            line-height: .86;
+
+            letter-spacing: -.095em;
+
+            font-weight: 900;
+        }
+
+        .hero-lead {
+            max-width: 680px;
+
+            margin-top: 30px;
+
+            color: var(--muted);
+
+            font-size:
+                clamp(
+                    1rem,
+                    2vw,
+                    1.12rem
+                );
+
+            line-height: 1.85;
+        }
+
+        .hero-lead strong {
+            color: var(--text);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 30px;
+        }
+
+        .button {
+            min-height: 45px;
+
+            padding:
+                0
+                18px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid var(--border);
+
+            border-radius: 9px;
+
+            background: var(--surface);
+
+            color: var(--text);
+
+            text-decoration: none;
+
+            font-size: .8rem;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                transform .2s ease,
+                border-color .2s ease,
+                background .2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+
+            border-color: var(--text);
+        }
+
+        .button.primary {
+            background: var(--text);
+
+            color: var(--bg);
+
+            border-color: var(--text);
+        }
+
+        .hero-side {
+            border-left: 1px solid var(--border);
+
+            padding-left: 30px;
+        }
+
+        .side-label {
+            color: var(--subtle);
+
+            text-transform: uppercase;
+
+            letter-spacing: .15em;
+
+            font-size: .63rem;
+            font-weight: 800;
+
+            margin-bottom: 15px;
+        }
+
+        .side-list {
+            list-style: none;
+        }
+
+        .side-list li {
+            display: flex;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 12px 0;
+
+            border-bottom:
+                1px solid var(--border);
+
+            font-size: .8rem;
+        }
+
+        .side-list span:first-child {
+            color: var(--muted);
+        }
+
+        .side-list span:last-child {
+            font-weight: 700;
+        }
+
+        /* =========================
+           SECTIONS
+        ========================= */
+
+        .section-head {
+            max-width: 700px;
+
+            margin-bottom: 48px;
+        }
+
+        .eyebrow {
+            color: var(--muted);
+
+            text-transform: uppercase;
+
+            letter-spacing: .16em;
+
+            font-size: .65rem;
+            font-weight: 850;
+
+            margin-bottom: 14px;
+        }
+
+        h2 {
+            font-size:
+                clamp(
+                    2.2rem,
+                    5vw,
+                    4rem
+                );
+
+            line-height: 1;
+
+            letter-spacing: -.07em;
+        }
+
+        .section-head p {
+            margin-top: 17px;
+
+            color: var(--muted);
+
+            max-width: 590px;
+
+            font-size: .92rem;
+
+            line-height: 1.8;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .card {
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+            border-radius: 16px;
+
+            box-shadow: var(--shadow);
+        }
+
+        /* =========================
+           ABOUT
+        ========================= */
+
+        .about-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap: 16px;
+        }
+
+        .about-card {
+            padding: 38px;
+        }
+
+        .about-card h3 {
+            font-size: 1.2rem;
+
+            letter-spacing: -.03em;
+
+            margin-bottom: 18px;
+        }
+
+        .about-card p {
+            color: var(--muted);
+
+            font-size: .9rem;
+
+            line-height: 1.9;
+        }
+
+        .about-card p + p {
+            margin-top: 15px;
+        }
+
+        /* =========================
+           TERMINAL
+        ========================= */
+
+        .terminal {
+            overflow: hidden;
+
+            background: #0b0b0b;
+
+            color: #f2f2f2;
+
+            border-color: #242424;
+        }
+
+        .terminal-top {
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 0 15px;
+
+            border-bottom:
+                1px solid #252525;
+        }
+
+        .tdot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #666;
+        }
+
+        .terminal-title {
+            margin-left: 8px;
+
+            color: #777;
+
+            font:
+                11px
+                monospace;
+        }
+
+        .terminal pre {
+            padding: 30px;
+
+            overflow-x: auto;
+
+            font:
+                13px/1.9
+                "SFMono-Regular",
+                Consolas,
+                monospace;
+
+            color: #bfc0c0;
+        }
+
+        .code-white {
+            color: #fff;
+        }
+
+        .code-gray {
+            color: #747474;
+        }
+
+        /* =========================
+           SKILLS
+        ========================= */
+
+        .skills {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 14px;
+        }
+
+        .skill {
+            min-height: 205px;
+
+            padding: 26px;
+        }
+
+        .skill-num {
+            color: var(--subtle);
+
+            font:
+                11px
+                monospace;
+        }
+
+        .skill-icon {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+            place-items: center;
+
+            margin:
+                25px
+                0
+                18px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 10px;
+
+            background: var(--surface-2);
+
+            font:
+                700
+                11px
+                monospace;
+        }
+
+        .skill h3 {
+            font-size: .95rem;
+
+            margin-bottom: 8px;
+        }
+
+        .skill p {
+            color: var(--muted);
+
+            font-size: .76rem;
+
+            line-height: 1.7;
+        }
+
+        /* =========================
+           PROJECTS
+        ========================= */
+
+        .projects {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 16px;
+        }
+
+        .project {
+            min-height: 360px;
+
+            padding: 30px;
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .project::after {
+            content: "";
+
+            position: absolute;
+
+            right: -90px;
+            bottom: -110px;
+
+            width: 260px;
+            height: 260px;
+
+            border-radius: 50%;
+
+            border:
+                1px solid
+                var(--border);
+
+            opacity: .55;
+
+            pointer-events: none;
+        }
+
+        .project-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .project-number {
+            color: var(--subtle);
+
+            font:
+                11px
+                monospace;
+        }
+
+        .status {
+            padding:
+                5px
+                9px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 999px;
+
+            font:
+                10px
+                monospace;
+
+            color: var(--muted);
+        }
+
+        .project h3 {
+            font-size: 1.65rem;
+
+            letter-spacing: -.045em;
+
+            margin-top: 70px;
+        }
+
+        .project p {
+            max-width: 530px;
+
+            margin-top: 12px;
+
+            color: var(--muted);
+
+            font-size: .84rem;
+
+            line-height: 1.8;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            margin-top: 25px;
+        }
+
+        .tag {
+            padding:
+                5px
+                9px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 999px;
+
+            color: var(--muted);
+
+            background: var(--surface-2);
+
+            font:
+                10px
+                monospace;
+        }
+
+        /* =========================
+           CONTACT
+        ========================= */
+
+        .contact {
+            padding-top: 80px;
+
+            padding-bottom: 100px;
+        }
+
+        .contact-card {
+            text-align: center;
+
+            padding:
+                75px
+                30px;
+        }
+
+        .contact-card h2 {
+            max-width: 750px;
+
+            margin: auto;
+        }
+
+        .contact-card p {
+            max-width: 540px;
+
+            margin:
+                18px
+                auto
+                0;
+
+            color: var(--muted);
+
+            font-size: .9rem;
+        }
+
+        .discord {
+            color: var(--text);
+
+            font-family: monospace;
+
+            font-weight: 700;
+        }
+
+        .contact-actions {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+            margin-top: 30px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            border-top:
+                1px solid
+                var(--border);
+
+            padding:
+                25px
+                20px;
+
+            color: var(--subtle);
+
+            font-size: .68rem;
+        }
+
+        .footer-inner {
+            width:
+                min(
+                    var(--max-width),
+                    100%
+                );
+
+            margin: auto;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        /* =========================
+           ANIMATION
+        ========================= */
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(18px);
+
+            transition:
+                opacity .65s ease,
+                transform .65s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+
+        /* =========================
+           TABLET
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .hero-inner {
+                grid-template-columns: 1fr;
+
+                gap: 50px;
+            }
+
+            .hero-side {
+                border-left: 0;
+
+                border-top:
+                    1px solid
+                    var(--border);
+
+                padding:
+                    25px
+                    0
+                    0;
+            }
+
+            .skills {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .nav-links {
+                gap: 16px;
+            }
+
+            .availability {
+                display: none;
+            }
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 620px) {
+
+            header {
+                padding:
+                    10px
+                    12px;
+            }
+
+            nav {
+                padding-left: 14px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                width:
+                    calc(100% - 28px);
+            }
+
+            section {
+                padding:
+                    80px
+                    0;
+            }
+
+            .hero {
+                padding-top: 125px;
+            }
+
+            h1 {
+                font-size:
+                    clamp(
+                        3.7rem,
+                        18vw,
+                        6rem
+                    );
+            }
+
+            .about-grid,
+            .projects {
+                grid-template-columns: 1fr;
+            }
+
+            .skills {
+                grid-template-columns: 1fr;
+            }
+
+            .about-card,
+            .project {
+                padding: 25px;
+            }
+
+            .contact-card {
+                padding:
+                    55px
+                    20px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+
+                text-align: center;
+            }
+        }
+
+        /* =========================
+           REDUCED MOTION
+        ========================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+
+                transition: none !important;
+            }
+
+            .reveal {
+                opacity: 1;
+
+                transform: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <nav>
+
+        <a
+            href="#top"
+            class="logo"
+        >
+            Nyx<span>.cs</span>
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="#about">
+                    About
+                </a>
+            </li>
+
+            <li>
+                <a href="#skills">
+                    Skills
+                </a>
+            </li>
+
+            <li>
+                <a href="#projects">
+                    Projects
+                </a>
+            </li>
+
+            <li>
+                <a href="#contact">
+                    Contact
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="nav-actions">
+
+            <div class="availability">
+                <span class="dot"></span>
+                Available for projects
+            </div>
+
+            <button
+                class="theme-toggle"
+                id="themeToggle"
+                type="button"
+                aria-label="Toggle color theme"
+            >
+                ☾
+            </button>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<main id="top">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="container">
+
+            <div class="hero-inner">
+
+                <div class="reveal">
+
+                    <div class="kicker">
+
+                        <span class="dot"></span>
+
+                        C++ Developer
+
+                    </div>
+
+                    <h1>
+                        Building software
+                        <span>from the ground up.</span>
+                    </h1>
+
+                    <p class="hero-lead">
+
+                        I'm Nyx — a developer focused on
+                        <strong>C++</strong>,
+                        systems programming,
+                        game engines, and understanding
+                        how software works under the hood.
+
+                    </p>
+
+                    <div class="actions">
+
+                        <a
+                            class="button primary"
+                            href="#projects"
+                        >
+                            View my work
+                        </a>
+
+                        <a
+                            class="button"
+                            href="#contact"
+                        >
+                            Get in touch
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <aside class="hero-side reveal">
+
+                    <div class="side-label">
+                        Focus
+                    </div>
+
+                    <ul class="side-list">
+
+                        <li>
+                            <span>Primary</span>
+                            <span>C++</span>
+                        </li>
+
+                        <li>
+                            <span>Also</span>
+                            <span>C#</span>
+                        </li>
+
+                        <li>
+                            <span>Specialty</span>
+                            <span>Game Engines</span>
+                        </li>
+
+                        <li>
+                            <span>Interest</span>
+                            <span>Systems</span>
+                        </li>
+
+                    </ul>
+
+                </aside>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+
+    <section id="about">
+
+        <div class="container">
+
+            <div class="section-head reveal">
+
+                <div class="eyebrow">
+                    01 / About
+                </div>
+
+                <h2>
+                    Curious about how
+                    things actually work.
+                </h2>
+
+                <p>
+                    I like working close to the code,
+                    learning through experimentation,
+                    and turning ideas into working software.
+                </p>
+
+            </div>
+
+
+            <div class="about-grid">
+
+                <article
+                    class="card about-card reveal"
+                >
+
+                    <h3>
+                        A little about me
+                    </h3>
+
+                    <p>
+                        I'm a developer who primarily
+                        works with <strong>C++</strong>,
+                        with occasional projects in
+                        <strong>C#</strong>.
+                    </p>
+
+                    <p>
+                        My interests are centered around
+                        game engines, systems programming,
+                        software architecture, and the
+                        lower-level concepts that make
+                        applications work.
+                    </p>
+
+                    <p>
+                        Most of my learning comes from
+                        building things, breaking them,
+                        figuring out why they broke,
+                        and building them better.
+                    </p>
+
+                </article>
+
+
+                <article
+                    class="card terminal reveal"
+                >
+
+                    <div class="terminal-top">
+
+                        <span class="tdot"></span>
+                        <span class="tdot"></span>
+                        <span class="tdot"></span>
+
+                        <span class="terminal-title">
+                            nyx.cpp
+                        </span>
+
+                    </div>
+
+                    <pre><span class="code-gray">// keep building</span>
+
+<span class="code-white">#include</span> &lt;iostream&gt;
+
+<span class="code-white">int</span> main()
+{
+    std::cout &lt;&lt;
+        <span class="code-white">"Hello, world."</span>;
+
+    <span class="code-white">return</span> 0;
+}</pre>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SKILLS -->
+
+    <section id="skills">
+
+        <div class="container">
+
+            <div class="section-head reveal">
+
+                <div class="eyebrow">
+                    02 / Skills
+                </div>
+
+                <h2>
+                    Tools I use to build.
+                </h2>
+
+                <p>
+                    A practical set of technologies
+                    and skills I use across my projects.
+                </p>
+
+            </div>
+
+
+            <div class="skills">
+
+                <article
+                    class="card skill reveal"
+                >
+
+                    <span class="skill-num">
+                        01
+                    </span>
+
+                    <div class="skill-icon">
+                        C++
+                    </div>
+
+                    <h3>
+                        C++
+                    </h3>
+
+                    <p>
+                        My primary language for
+                        performance-focused software,
+                        systems, tooling, and game engines.
+                    </p>
+
+                </article>
+
+
+                <article
+                    class="card skill reveal"
+                >
+
+                    <span class="skill-num">
+                        02
+                    </span>
+
+                    <div class="skill-icon">
+                        C#
+                    </div>
+
+                    <h3>
+                        C#
+                    </h3>
+
+                    <p>
+                        Used for projects where its
+                        ecosystem and frameworks make
+                        sense for the job.
+                    </p>
+
+                </article>
+
+
+                <article
+                    class="card skill reveal"
+                >
+
+                    <span class="skill-num">
+                        03
+                    </span>
+
+                    <div class="skill-icon">
+                        SYS
+                    </div>
+
+                    <h3>
+                        Systems
+                    </h3>
+
+                    <p>
+                        Interested in low-level concepts,
+                        architecture, performance,
+                        and software internals.
+                    </p>
+
+                </article>
+
+
+                <article
+                    class="card skill reveal"
+                >
+
+                    <span class="skill-num">
+                        04
+                    </span>
+
+                    <div class="skill-icon">
+                        DEV
+                    </div>
+
+                    <h3>
+                        Problem Solving
+                    </h3>
+
+                    <p>
+                        Breaking complex problems into
+                        smaller, understandable,
+                        maintainable pieces.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PROJECTS -->
+
+    <section id="projects">
+
+        <div class="container">
+
+            <div class="section-head reveal">
+
+                <div class="eyebrow">
+                    03 / Projects
+                </div>
+
+                <h2>
+                    Things I've built.
+                </h2>
+
+                <p>
+                    Projects, experiments, and ideas
+                    I've worked on.
+                </p>
+
+            </div>
+
+
+            <div class="projects">
+
+                <article
+                    class="card project reveal"
+                >
+
+                    <div>
+
+                        <div class="project-top">
+
+                            <span class="project-number">
+                                PROJECT / 01
+                            </span>
+
+                            <span class="status">
+                                CANCELLED
+                            </span>
+
+                        </div>
+
+                        <h3>
+                            BAGE
+                        </h3>
+
+                        <p>
+                            BlackCloud Advanced Game Engine.
+                            An ambitious C++ game-engine
+                            project exploring engine architecture,
+                            systems, and low-level development.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tags">
+
+                        <span class="tag">
+                            C++
+                        </span>
+
+                        <span class="tag">
+                            Game Engine
+                        </span>
+
+                        <span class="tag">
+                            Architecture
+                        </span>
+
+                    </div>
+
+                </article>
+
+
+                <article
+                    class="card project reveal"
+                >
+
+                    <div>
+
+                        <div class="project-top">
+
+                            <span class="project-number">
+                                PROJECT / 02
+                            </span>
+
+                            <span class="status">
+                                IN DEVELOPMENT
+                            </span>
+
+                        </div>
+
+                        <h3>
+                            RAGE
+                        </h3>
+
+                        <p>
+                            A new game-engine project
+                            being developed from the
+                            ground up. Focused on C++,
+                            engine architecture, rendering,
+                            and game-development systems.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tags">
+
+                        <span class="tag">
+                            C++
+                        </span>
+
+                        <span class="tag">
+                            Game Engine
+                        </span>
+
+                        <span class="tag">
+                            Rendering
+                        </span>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONTACT -->
+
+    <section
+        id="contact"
+        class="contact"
+    >
+
+        <div class="container">
+
+            <div
+                class="card contact-card reveal"
+            >
+
+                <div class="eyebrow">
+                    04 / Contact
+                </div>
+
+                <h2>
+                    Let's build something.
+                </h2>
+
+                <p>
+                    Want to talk about a project,
+                    development, or software?
+
+                    Find me on Discord at
+                    <span class="discord">
+                        @ne0dev223
+                    </span>.
+                </p>
+
+                <div class="contact-actions">
+
+                    <button
+                        class="button primary"
+                        id="copyDiscord"
+                        type="button"
+                    >
+                        Copy Discord
+                    </button>
+
+                    <a
+                        class="button"
+                        href="mailto:nyx@umbraai.org"
+                    >
+                        Email me
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-inner">
+
+        <span>
+            © 2026 Nyx.cs
+        </span>
+
+        <span>
+            C++ · Systems · Game Development
+        </span>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    /* =========================
+       THEME
+    ========================= */
+
+    const root =
+        document.documentElement;
+
+    const toggle =
+        document.getElementById(
+            "themeToggle"
+        );
+
+    const savedTheme =
+        localStorage.getItem(
+            "nyx-theme"
+        );
+
+    const prefersDark =
+        window.matchMedia(
+            "(prefers-color-scheme: dark)"
+        ).matches;
+
+    root.dataset.theme =
+        savedTheme ||
+        (
+            prefersDark
+                ? "dark"
+                : "light"
+        );
+
+
+    function updateThemeIcon() {
+
+        toggle.textContent =
+            root.dataset.theme === "dark"
+                ? "☀"
+                : "☾";
+
+        toggle.setAttribute(
+            "aria-label",
+            root.dataset.theme === "dark"
+                ? "Switch to light mode"
+                : "Switch to dark mode"
+        );
+    }
+
+
+    updateThemeIcon();
+
+
+    toggle.addEventListener(
+        "click",
+        () => {
+
+            root.dataset.theme =
+                root.dataset.theme === "dark"
+                    ? "light"
+                    : "dark";
+
+            localStorage.setItem(
+                "nyx-theme",
+                root.dataset.theme
+            );
+
+            updateThemeIcon();
+
+        }
+    );
+
+
+    /* =========================
+       SCROLL REVEAL
+    ========================= */
+
+    const reveal =
+        document.querySelectorAll(
+            ".reveal"
+        );
+
+
+    const observer =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(
+                    entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            entry.target.classList.add(
+                                "visible"
+                            );
+
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold: .1
+            }
+        );
+
+
+    reveal.forEach(
+        element =>
+            observer.observe(element)
+    );
+
+
+    /* =========================
+       COPY DISCORD
+    ========================= */
+
+    const copy =
+        document.getElementById(
+            "copyDiscord"
+        );
+
+
+    copy.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    "@ne0dev223"
+                );
+
+                const oldText =
+                    copy.textContent;
+
+                copy.textContent =
+                    "Copied!";
+
+                setTimeout(
+                    () => {
+                        copy.textContent =
+                            oldText;
+                    },
+                    1500
+                );
+
+            }
+
+            catch {
+
+                copy.textContent =
+                    "Copy failed";
+
+                setTimeout(
+                    () => {
+                        copy.textContent =
+                            "Copy Discord";
+                    },
+                    1500
+                );
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
