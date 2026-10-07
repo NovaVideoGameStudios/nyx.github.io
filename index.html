@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050508">
+    <meta name="description" content="Nyx.cs — C++ developer and occasional C# enjoyer.">
+    <title>Nyx.cs — Developer Portfolio</title>
+
+    <style>
+        :root {
+            --bg: #040406;
+            --bg2: #09090d;
+            --text: #f5f5f7;
+            --muted: #858592;
+            --purple: #9b5cff;
+            --purple2: #6c2cff;
+            --cyan: #42e8ff;
+            --card: rgba(15, 15, 22, 0.62);
+            --border: rgba(255, 255, 255, 0.09);
+            --glow: rgba(155, 92, 255, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            background:
+                radial-gradient(circle at 50% -10%, rgba(120, 45, 255, 0.18), transparent 35%),
+                radial-gradient(circle at 10% 60%, rgba(66, 232, 255, 0.05), transparent 25%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        /* ---------- BACKGROUND ---------- */
+
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            width: 100%;
+            height: 100%;
+        }
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+            opacity: 0.025;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+        }
+
+        .orb {
+            position: fixed;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .orb.one {
+            background: var(--purple);
+            top: -180px;
+            left: 20%;
+        }
+
+        .orb.two {
+            background: var(--cyan);
+            right: -250px;
+            top: 45%;
+            opacity: 0.06;
+        }
+
+        /* ---------- NAV ---------- */
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 22px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(
+                to bottom,
+                rgba(4, 4, 6, 0.85),
+                transparent
+            );
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.04em;
+        }
+
+        .logo span {
+            color: var(--purple);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #aaaab4;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.25s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        /* ---------- HERO ---------- */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 6% 60px;
+            perspective: 1200px;
+        }
+
+        .hero-content {
+            width: min(1100px, 100%);
+            text-align: center;
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 14px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.035);
+            color: #aaaab4;
+            font-size: 0.78rem;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 35px rgba(155, 92, 255, 0.08);
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #72ff9d;
+            box-shadow: 0 0 12px #72ff9d;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: 0.35;
+                transform: scale(0.7);
+            }
+        }
+
+        h1 {
+            font-size: clamp(4rem, 13vw, 10rem);
+            line-height: 0.82;
+            letter-spacing: -0.085em;
+            font-weight: 900;
+            background: linear-gradient(
+                110deg,
+                #fff 0%,
+                #fff 30%,
+                #cdaaff 55%,
+                #7e35ff 85%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 80px rgba(155, 92, 255, 0.15);
+        }
+
+        .subtitle {
+            margin: 35px auto 0;
+            max-width: 600px;
+            color: var(--muted);
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            line-height: 1.7;
+        }
+
+        .subtitle strong {
+            color: #dddde4;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 21px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            font-size: 0.86rem;
+            font-weight: 650;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.045);
+            transition:
+                transform 0.25s,
+                background 0.25s,
+                border 0.25s,
+                box-shadow 0.25s;
+            backdrop-filter: blur(12px);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(155, 92, 255, 0.4);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, var(--purple2), var(--purple));
+            border-color: transparent;
+            box-shadow: 0 10px 35px rgba(108, 44, 255, 0.25);
+        }
+
+        .btn.primary:hover {
+            box-shadow: 0 15px 45px rgba(108, 44, 255, 0.4);
+        }
+
+        /* ---------- SECTIONS ---------- */
+
+        section {
+            width: min(1050px, 88%);
+            margin: auto;
+            padding: 120px 0;
+        }
+
+        .section-label {
+            color: var(--purple);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.68rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            letter-spacing: -0.055em;
+            margin-bottom: 45px;
+        }
+
+        /* ---------- ABOUT ---------- */
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 22px;
+        }
+
+        .card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.3),
+                inset 0 1px rgba(255, 255, 255, 0.035);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(155, 92, 255, 0.12),
+                transparent 45%
+            );
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .about-card {
+            padding: 35px;
+            min-height: 280px;
+        }
+
+        .about-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 18px;
+        }
+
+        .about-card p {
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .terminal {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .terminal-bar {
+            height: 43px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0 15px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.025);
+        }
+
+        .terminal-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot:nth-child(1) { background: #ff5f57; }
+        .terminal-dot:nth-child(2) { background: #febc2e; }
+        .terminal-dot:nth-child(3) { background: #28c840; }
+
+        pre {
+            padding: 27px;
+            overflow-x: auto;
+            color: #bdbdc9;
+            font: 0.82rem/1.8 "SFMono-Regular", Consolas, monospace;
+        }
+
+        .purple { color: #bd83ff; }
+        .blue { color: #70b7ff; }
+        .green { color: #79e6a0; }
+        .gray { color: #676775; }
+
+        /* ---------- SKILLS ---------- */
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .skill {
+            padding: 25px;
+            transition: transform 0.35s, border 0.35s;
+        }
+
+        .skill:hover {
+            transform: translateY(-7px) rotateX(2deg);
+            border-color: rgba(155, 92, 255, 0.3);
+        }
+
+        .skill-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            background: linear-gradient(
+                135deg,
+                rgba(155,92,255,0.22),
+                rgba(66,232,255,0.07)
+            );
+            border: 1px solid rgba(155, 92, 255, 0.2);
+            color: #c49aff;
+            font-weight: 900;
+            font-family: monospace;
+        }
+
+        .skill h3 {
+            margin-bottom: 8px;
+        }
+
+        .skill p {
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 0.88rem;
+        }
+
+        /* ---------- PROJECTS ---------- */
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .project {
+            min-height: 220px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: 0.35s;
+            transform-style: preserve-3d;
+        }
+
+        .project:hover {
+            transform: translateY(-8px) rotateX(2deg) rotateY(-2deg);
+            border-color: rgba(155, 92, 255, 0.32);
+            box-shadow: 0 25px 80px rgba(80, 30, 180, 0.12);
+        }
+
+        .project-number {
+            color: #575762;
+            font: 0.72rem monospace;
+        }
+
+        .project h3 {
+            margin-top: 30px;
+            font-size: 1.35rem;
+        }
+
+        .project p {
+            color: var(--muted);
+            margin-top: 8px;
+            line-height: 1.6;
+            font-size: 0.88rem;
+        }
+
+        .tags {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .tag {
+            color: #aaaab5;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 5px 9px;
+            font: 0.68rem monospace;
+            background: rgba(255,255,255,0.025);
+        }
+
+        /* ---------- CONTACT ---------- */
+
+        .contact {
+            text-align: center;
+            padding-bottom: 80px;
+        }
+
+        .contact-box {
+            padding: 60px 25px;
+        }
+
+        .contact h2 {
+            font-size: clamp(2.2rem, 6vw, 4.5rem);
+            letter-spacing: -0.065em;
+            margin-bottom: 15px;
+        }
+
+        .contact p {
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .discord {
+            color: #b98aff;
+            font-family: monospace;
+        }
+
+        /* ---------- FOOTER ---------- */
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 25px 6%;
+            color: #555560;
+            font-size: 0.72rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+
+        @media (max-width: 750px) {
+            nav {
+                padding: 18px 5%;
+            }
+
+            nav ul {
+                gap: 14px;
+            }
+
+            nav li:nth-child(2) {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 120px;
+            }
+
+            .about-grid,
+            .skills,
+            .projects {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 85px 0;
+            }
+
+            .about-card {
+                min-height: auto;
+            }
+
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+    <div class="noise"></div>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <a href="#" class="logo">Nyx<span>.cs</span></a>
+
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <main>
+        <section class="hero">
+            <div class="hero-content" id="heroContent">
+
+                <div class="status">
+                    <span class="dot"></span>
+                    Available for projects
+                </div>
+
+                <h1>Nyx.cs</h1>
+
+                <p class="subtitle">
+                    <strong>C++ developer.</strong>
+                    Systems, software, and whatever interesting thing
+                    I decide to build next.
+                    Occasionally writing C# too.
+                </p>
+
+                <div class="buttons">
+                    <a class="btn primary" href="#projects">
+                        View Projects
+                    </a>
+
+                    <a class="btn" href="#contact">
+                        Contact Me
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="section-label">01 / About</div>
+            <h2 class="section-title">Built from curiosity.</h2>
+
+            <div class="about-grid">
+
+                <div class="card about-card">
+                    <h3>Hey, I'm Nyx.</h3>
+
+                    <p>
+                        I'm a developer who mainly works with
+                        <strong>C++</strong>, with occasional side quests
+                        into <strong>C#</strong>.
+                        I enjoy building software, experimenting with
+                        lower-level concepts, and turning random ideas
+                        into actual projects.
+                    </p>
+
+                    <br>
+
+                    <p>
+                        This portfolio is a small look at what I build
+                        and what I'm currently interested in.
+                    </p>
+                </div>
+
+                <div class="card terminal">
+                    <div class="terminal-bar">
+                        <span class="terminal-dot"></span>
+                        <span class="terminal-dot"></span>
+                        <span class="terminal-dot"></span>
+                    </div>
+
+                    <pre><span class="gray">// nyx.cpp</span>
+
+<span class="purple">#include</span> <span class="green">&lt;iostream&gt;</span>
+
+<span class="purple">int</span> main() {
+    std::cout &lt;&lt;
+        <span class="green">"Hello, world."</span>;
+
+    <span class="purple">return</span> <span class="blue">0</span>;
+}</pre>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills">
+            <div class="section-label">02 / Skills</div>
+            <h2 class="section-title">What I work with.</h2>
+
+            <div class="skills">
+
+                <div class="card skill">
+                    <div class="skill-icon">C++</div>
+                    <h3>C++</h3>
+                    <p>
+                        My primary language. Used for performance-focused
+                        software, systems, tooling, and experimentation.
+                    </p>
+                </div>
+
+                <div class="card skill">
+                    <div class="skill-icon">C#</div>
+                    <h3>C#</h3>
+                    <p>
+                        A secondary language I use when the project,
+                        framework, or idea calls for it.
+                    </p>
+                </div>
+
+                <div class="card skill">
+                    <div class="skill-icon">{ }</div>
+                    <h3>Problem Solving</h3>
+                    <p>
+                        Breaking complicated ideas into smaller pieces
+                        and turning them into working code.
+                    </p>
+                </div>
+
+                <div class="card skill">
+                    <div class="skill-icon">&gt;_</div>
+                    <h3>Development</h3>
+                    <p>
+                        Building, debugging, testing, and continuously
+                        improving projects.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects">
+            <div class="section-label">03 / Projects</div>
+            <h2 class="section-title">Things I've built.</h2>
+
+            <div class="projects">
+
+                <!-- Replace these with your real projects -->
+
+                <article class="card project">
+                    <div>
+                        <span class="project-number">PROJECT / 01</span>
+                        <h3>Your Project</h3>
+                        <p>
+                            Replace this with a description of one of
+                            your C++ projects.
+                        </p>
+                    </div>
+
+                    <div class="tags">
+                        <span class="tag">C++</span>
+                        <span class="tag">Systems</span>
+                    </div>
+                </article>
+
+                <article class="card project">
+                    <div>
+                        <span class="project-number">PROJECT / 02</span>
+                        <h3>Another Project</h3>
+                        <p>
+                            Add another project here with a short
+                            explanation of what makes it interesting.
+                        </p>
+                    </div>
+
+                    <div class="tags">
+                        <span class="tag">C++</span>
+                        <span class="tag">Development</span>
+                    </div>
+                </article>
+
+                <article class="card project">
+                    <div>
+                        <span class="project-number">PROJECT / 03</span>
+                        <h3>C# Project</h3>
+                        <p>
+                            A place for one of your C# projects,
+                            experiments, or applications.
+                        </p>
+                    </div>
+
+                    <div class="tags">
+                        <span class="tag">C#</span>
+                        <span class="tag">.NET</span>
+                    </div>
+                </article>
+
+                <article class="card project">
+                    <div>
+                        <span class="project-number">PROJECT / 04</span>
+                        <h3>Coming Soon</h3>
+                        <p>
+                            Something new is probably being built.
+                        </p>
+                    </div>
+
+                    <div class="tags">
+                        <span class="tag">WIP</span>
+                        <span class="tag">Nyx</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="contact">
+            <div class="card contact-box">
+
+                <div class="section-label">04 / Contact</div>
+
+                <h2>Let's build something.</h2>
+
+                <p>
+                    Find me on Discord:
+                    <span class="discord">@ne0dev223</span>
+                </p>
+
+                <div class="buttons">
+                    <button class="btn primary" id="copyDiscord">
+                        Copy Discord
+                    </button>
+
+                    <!-- Replace # with your GitHub URL -->
+                    <a class="btn" href="#" target="_blank">
+                        GitHub
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <span>© 2026 Nyx.cs</span>
+        <span>Built with C++ brainrot &lt;3</span>
+    </footer>
+
+    <script>
+        /* =========================================================
+           3D STAR / PARTICLE BACKGROUND
+           ========================================================= */
+
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        let width;
+        let height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+
+            const amount = Math.min(
+                180,
+                Math.floor((width * height) / 9000)
+            );
+
+            particles = [];
+
+            for (let i = 0; i < amount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    z: Math.random() * 2 + 0.2,
+                    size: Math.random() * 1.5 + 0.2,
+                    speed: Math.random() * 0.18 + 0.03
+                });
+            }
+        }
+
+        window.addEventListener("resize", resize);
+        resize();
+
+        let mouseX = width / 2;
+        let mouseY = height / 2;
+
+        window.addEventListener("mousemove", (event) => {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        });
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, width, height);
+
+            const offsetX = (mouseX - width / 2) * 0.012;
+            const offsetY = (mouseY - height / 2) * 0.012;
+
+            for (const p of particles) {
+                p.y += p.speed;
+
+                if (p.y > height + 10) {
+                    p.y = -10;
+                    p.x = Math.random() * width;
+                }
+
+                const x = p.x + offsetX * p.z;
+                const y = p.y + offsetY * p.z;
+
+                const alpha = 0.15 + p.z * 0.2;
+
+                ctx.beginPath();
+                ctx.arc(x, y, p.size * p.z, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(170, 120, 255, ${alpha})`;
+                ctx.fill();
+            }
+
+            requestAnimationFrame(drawParticles);
+        }
+
+        drawParticles();
+
+
+        /* =========================================================
+           HERO 3D MOUSE EFFECT
+           ========================================================= */
+
+        const hero = document.getElementById("heroContent");
+
+        window.addEventListener("mousemove", (event) => {
+            if (window.innerWidth < 700) return;
+
+            const x = (event.clientX / window.innerWidth - 0.5);
+            const y = (event.clientY / window.innerHeight - 0.5);
+
+            hero.style.transform = `
+                rotateX(${y * -4}deg)
+                rotateY(${x * 5}deg)
+                translateZ(15px)
+            `;
+        });
+
+
+        /* =========================================================
+           3D CARD LIGHTING
+           ========================================================= */
+
+        document.querySelectorAll(".card").forEach(card => {
+
+            card.addEventListener("mousemove", event => {
+
+                const rect = card.getBoundingClientRect();
+
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                card.style.setProperty("--mouse-x", `${x}px`);
+                card.style.setProperty("--mouse-y", `${y}px`);
+
+            });
+
+        });
+
+
+        /* =========================================================
+           COPY DISCORD
+           ========================================================= */
+
+        const copyButton = document.getElementById("copyDiscord");
+
+        copyButton.addEventListener("click", async () => {
+
+            try {
+                await navigator.clipboard.writeText("@ne0dev223");
+
+                const original = copyButton.textContent;
+
+                copyButton.textContent = "Copied!";
+
+                setTimeout(() => {
+                    copyButton.textContent = original;
+                }, 1800);
+
+            } catch {
+                copyButton.textContent = "Copy failed";
+
+                setTimeout(() => {
+                    copyButton.textContent = "Copy Discord";
+                }, 1800);
+            }
+
+        });
+
+
+        /* =========================================================
+           SCROLL REVEAL
+           ========================================================= */
+
+        const observer = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+                    }
+
+                });
+            },
+            {
+                threshold: 0.08
+            }
+        );
+
+        document.querySelectorAll(".card, .section-title, .section-label")
+            .forEach(element => {
+
+                element.style.opacity = "0";
+                element.style.transform = "translateY(18px)";
+                element.style.transition =
+                    "opacity .7s ease, transform .7s ease";
+
+                observer.observe(element);
+            });
+    </script>
+
+</body>
+</html>
